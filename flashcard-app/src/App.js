@@ -6,7 +6,7 @@ import Home from './Pages/Home';
 import Dashboard from './Pages/Dashboard';
 import Details from './Pages/Details';
 import Profile from './Pages/Profile';
-import './App.css';
+
 
 const App = () => {
   return (

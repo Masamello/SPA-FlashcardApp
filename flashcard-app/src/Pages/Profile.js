@@ -70,6 +70,22 @@ const Profile = () =>{
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">Gender</label>
+                                        <select className="form-select" value={formData.gender} onChange={(e)=>setFormData({...formData,gender:e.target.value})}>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-12">
+                                        <label className="form-label">Bio</label>
+                                        <textarea className="form-control" rows="3" value={formData.bio} onChange={(e)=>setFormData({...formData,bio:e.target.value})} placeholder="tell us about yourself">
+
+                                        </textarea>
+                                    </div>
+                                    <div className="col-12">
+                                        <button type="submit" className="btn btn-primary px-4">
+                                            Save Changes
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -80,3 +96,5 @@ const Profile = () =>{
         </div>
     )
 }
+
+export default Profile;
