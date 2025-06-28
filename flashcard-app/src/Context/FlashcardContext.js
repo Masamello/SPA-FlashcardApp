@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 
 export const FlashcardContext = createContext();
 
-export const FlashcardProvider = ({Children}) =>{
+export const FlashcardProvider = ({children}) =>{
     const[flashcards,setFlashcards] = useState([]);
     const[isLoading,setIsLoading] = useState(true);
 
@@ -20,7 +20,7 @@ export const FlashcardProvider = ({Children}) =>{
 
     //saving flashcards when every time falshcards update
     useEffect(()=>{
-        localStorage.setItem('flashcaeds',JSON.stringify(flashcards));
+        localStorage.setItem('flashcards',JSON.stringify(flashcards));
     },[flashcards]);
 
     const addFlashcard = (flashcard) => {
@@ -50,7 +50,7 @@ export const FlashcardProvider = ({Children}) =>{
             updateFlashcards,
             deleteFlashcard
         }}>
-            {Children}
+            {children}
         </FlashcardContext.Provider>
     );
 };
