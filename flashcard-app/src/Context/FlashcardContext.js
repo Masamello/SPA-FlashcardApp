@@ -4,32 +4,58 @@ export const FlashcardContext = createContext();
 
 export const FlashcardProvider = ({children}) =>{
     const[flashcards,setFlashcards] = useState([]);
+    const[categories,setCategories] = useState([]);
     const[isLoading,setIsLoading] = useState(true);
 
-    //loading flashcards from localStorage
+    //loading flashcards and categories from localStorage
     useEffect(()=>{
-        const loadFlashcards =()=>{
+        const loadData =()=>{
             const storeCards = localStorage.getItem('flashcards');
+            const storeCategories = localStorage.getItem('flashcardCategories');
+            
             if(storeCards !== null){
                 setFlashcards(JSON.parse(storeCards));
             }
+            
+            if(storeCategories !== null){
+                setCategories(JSON.parse(storeCategories));
+            } else {
+                // デフォルトカテゴリを設定
+                const defaultCategories = [
+                    { id: '1', name: 'General', color: 'primary', description: 'General flashcards' },
+                    { id: '2', name: 'Study', color: 'success', description: 'Study materials' },
+                    { id: '3', name: 'Work', color: 'warning', description: 'Work related' },
+                    { id: '4', name: 'Personal', color: 'info', description: 'Personal notes' }
+                ];
+                setCategories(defaultCategories);
+                localStorage.setItem('flashcardCategories', JSON.stringify(defaultCategories));
+            }
+            
             setIsLoading(false);
         };
-        loadFlashcards();
+        loadData();
     },[]);
 
-    //saving flashcards when every time falshcards update
+    //saving flashcards when every time flashcards update
     useEffect(()=>{
         localStorage.setItem('flashcards',JSON.stringify(flashcards));
     },[flashcards]);
+
+    //saving categories when every time categories update
+    useEffect(()=>{
+        localStorage.setItem('flashcardCategories',JSON.stringify(categories));
+    },[categories]);
 
     const addFlashcard = (flashcard) => {
         setFlashcards(prev => [...prev,{
             ...flashcard,
             id: Date.now().toString(),
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            category: flashcard.category || 'General',
+            tags: flashcard.tags || []
         }]);
     }
+
     const updateFlashcards = (id,updates) =>{
         setFlashcards(prev=>
             prev.map(card =>
@@ -42,13 +68,71 @@ export const FlashcardProvider = ({children}) =>{
         setFlashcards(prev => prev.filter(card => card.id !== id))
     };
 
+    // カテゴリ関連の関数
+    const addCategory = (category) => {
+        const newCategory = {
+            ...category,
+            id: Date.now().toString(),
+            createdAt: new Date().toISOString()
+        };
+        setCategories(prev => [...prev, newCategory]);
+    };
+
+    const updateCategory = (id, updates) => {
+        setCategories(prev =>
+            prev.map(cat =>
+                cat.id === id ? {...cat, ...updates} : cat
+            )
+        );
+    };
+
+    const deleteCategory = (id) => {
+        setCategories(prev => prev.filter(cat => cat.id !== id));
+        // そのカテゴリのカードをGeneralカテゴリに移動
+        setFlashcards(prev =>
+            prev.map(card =>
+                card.category === id ? {...card, category: 'General'} : card
+            )
+        );
+    };
+
+    // カテゴリ別のカードを取得
+    const getCardsByCategory = (categoryId) => {
+        return flashcards.filter(card => card.category === categoryId);
+    };
+
+    // タグ別のカードを取得
+    const getCardsByTag = (tag) => {
+        return flashcards.filter(card => 
+            card.tags && card.tags.includes(tag)
+        );
+    };
+
+    // すべてのタグを取得
+    const getAllTags = () => {
+        const allTags = new Set();
+        flashcards.forEach(card => {
+            if (card.tags) {
+                card.tags.forEach(tag => allTags.add(tag));
+            }
+        });
+        return Array.from(allTags);
+    };
+
     return(
         <FlashcardContext.Provider value={{
             flashcards,
+            categories,
             isLoading,
             addFlashcard,
             updateFlashcards,
-            deleteFlashcard
+            deleteFlashcard,
+            addCategory,
+            updateCategory,
+            deleteCategory,
+            getCardsByCategory,
+            getCardsByTag,
+            getAllTags
         }}>
             {children}
         </FlashcardContext.Provider>
