@@ -29,7 +29,16 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProfile = (profileData) => {
-    const updatedUser = { ...currentUser, ...profileData };
+    if (!currentUser) return;
+    
+    const updatedUser = { 
+      ...currentUser, 
+      ...profileData,
+      // 既存の重要な情報を保持
+      id: currentUser.id,
+      email: currentUser.email,
+      role: currentUser.role
+    };
     setCurrentUser(updatedUser);
     localStorage.setItem('flashcardAppUser', JSON.stringify(updatedUser));
   };

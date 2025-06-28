@@ -1,8 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext';
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -29,7 +35,7 @@ const Navbar = () => {
           </ul>
           <div className="d-flex">
             {currentUser ? (
-              <button className="btn btn-outline-light" onClick={logout}>
+              <button className="btn btn-outline-light" onClick={handleLogout}>
                 Logout
               </button>
             ) : (

@@ -1,14 +1,14 @@
-import React,{ useContext,useState,useEffect, use } from "react";
+import React,{ useContext,useState,useEffect } from "react";
 import { useParams,useNavigate } from "react-router-dom";
 import { FlashcardContext } from "../Context/FlashcardContext";
 
 const Details = () => {
     const {id} = useParams();
-    const {flashcards,uodateFlashcard} = useContext(FlashcardContext);
+    const {flashcards, updateFlashcards} = useContext(FlashcardContext);
     const [card,setCard] = useState(null);
-    const [isFlipped,setIsFlippeed] = useState(false);
+    const [isFlipped,setIsFlipped] = useState(false);
     const [userAnswer,setUserAnswer] = useState('');
-    const [feedback,setFeedBack] = useState('');
+    const [feedback,setFeedback] = useState('');
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -24,12 +24,12 @@ const Details = () => {
         if(!card) return;
 
         const isCorrect = userAnswer.trim().toLowerCase() === card.answer.trim().toLowerCase();
-        setFeedBack(isCorrect ? 'Correct!' : `Incorrect. The Answer is: ${card.answer}`);
+        setFeedback(isCorrect ? 'Correct!' : `Incorrect. The Answer is: ${card.answer}`);
 
-        // uodate the study record
-        if(card.__protp__.hasOwnProperty('updateStudyRecord')){
-            card.updateStudyRecord(isCorrect);
-            uodateFlashcard(id,card);
+        // Update the study record if the card has review method
+        if(card.review && typeof card.review === 'function'){
+            card.review();
+            updateFlashcards(id, card);
         }
     };
 
@@ -40,7 +40,7 @@ const Details = () => {
             <button className="btn btn-link mb-3" onClick={()=>navigate(-1)}>
                 Back to Dashboard
             </button>
-            <div className={`card mb-4 ${isFlipped ? 'bg-light' : ''}`} onClick={()=>setIsFlippeed(!isFlipped)} style={{cursor:'pointer',minHeight:'200px'}}>
+            <div className={`card mb-4 ${isFlipped ? 'bg-light' : ''}`} onClick={()=>setIsFlipped(!isFlipped)} style={{cursor:'pointer',minHeight:'200px'}}>
                 <div className="card-body d-flex align-items-center justify-content-center">
                     <h3 className="card-title text-center">
                         {isFlipped ? card.answer : card.question}

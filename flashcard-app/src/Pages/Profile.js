@@ -1,20 +1,44 @@
-import React,{useContext,useState} from "react";
+import React,{useContext,useState,useEffect} from "react";
 import { AuthContext } from "../Context/AuthContext";
 import './Profile.css';
 
 const Profile = () =>{
-    const { currentUser, updateUser } = useContext(AuthContext);
+    const { currentUser, updateProfile } = useContext(AuthContext);
     const [formData, setFormData] = useState({
-        name:currentUser?.name || '',
-        birthday: currentUser?.birthday || '',
-        gender: currentUser?.gender || '',
-        bio: currentUser?.bio || ''
+        name: '',
+        birthday: '',
+        gender: '',
+        bio: ''
     });
+
+    // currentUserが変更されたときにformDataを更新
+    useEffect(() => {
+        if (currentUser) {
+            setFormData({
+                name: currentUser.name || '',
+                birthday: currentUser.birthday || '',
+                gender: currentUser.gender || '',
+                bio: currentUser.bio || ''
+            });
+        }
+    }, [currentUser]);
 
     const submitHandler = (e)=>{
         e.preventDefault();
-        updateUser(formData);
+        updateProfile(formData);
+        alert('Profile updated successfully!');
     };
+
+    // ユーザーがログインしていない場合
+    if (!currentUser) {
+        return (
+            <div className="container mt-4">
+                <div className="alert alert-warning">
+                    Please log in to view your profile.
+                </div>
+            </div>
+        );
+    }
 
     return(
         <div className="profile-container">
@@ -37,12 +61,12 @@ const Profile = () =>{
                             <hr/>
                             <div className="profile-info">
                                 <p>
-                                    <i className="bi bi-gender-ambigous me-2"></i>
+                                    <i className="bi bi-gender-ambiguous me-2"></i>
                                     {formData.gender === 'male'?'Male':formData.gender === 'female' ? 'Female':'Other'}
                                 </p>
                                 {formData.birthday && (
                                     <p>
-                                        <i className="bi bi-calender3 me-2"></i>
+                                        <i className="bi bi-calendar3 me-2"></i>
                                         {new Date(formData.birthday).toLocaleDateString()}
                                     </p>
                                 )}
@@ -65,12 +89,13 @@ const Profile = () =>{
                                         <input type="text" className="form-control" value={formData.name} onChange={(e)=>setFormData({...formData,name:e.target.value})}/>
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="fomr-label">Birthday</label>
+                                        <label className="form-label">Birthday</label>
                                         <input type="date" className="form-control" value={formData.birthday} onChange={(e)=>setFormData({...formData, birthday:e.target.value})}/>
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">Gender</label>
                                         <select className="form-select" value={formData.gender} onChange={(e)=>setFormData({...formData,gender:e.target.value})}>
+                                            <option value="">Select Gender</option>
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                             <option value="other">Other</option>
@@ -78,8 +103,7 @@ const Profile = () =>{
                                     </div>
                                     <div className="col-12">
                                         <label className="form-label">Bio</label>
-                                        <textarea className="form-control" rows="3" value={formData.bio} onChange={(e)=>setFormData({...formData,bio:e.target.value})} placeholder="tell us about yourself">
-
+                                        <textarea className="form-control" rows="3" value={formData.bio} onChange={(e)=>setFormData({...formData,bio:e.target.value})} placeholder="Tell us about yourself">
                                         </textarea>
                                     </div>
                                     <div className="col-12">

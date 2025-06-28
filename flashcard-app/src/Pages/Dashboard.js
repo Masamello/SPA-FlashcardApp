@@ -5,7 +5,7 @@ import { StudyFlashcard } from "../classes/StudyFlashCard";
 import { useFlashcards } from "../Context/FlashcardContext";
 
 const Dashboard =()=>{
-    const { flashcards, addFlashcard, updateFlashcard} = useContext(FlashcardContext);
+    const { flashcards, addFlashcard, updateFlashcards} = useContext(FlashcardContext);
     const [newCard, setNewCard] = useState({ question: "", answer: "" });
     const navigate = useNavigate();
 
@@ -16,14 +16,14 @@ const Dashboard =()=>{
     };
 
     const studyHandler =(id) =>{
-        navigate(`/flashcard/${id}`);
+        navigate(`/flashcards/${id}`);
     };
 
-    const difficultyChageHandler =(id,difficulty)=>{
+    const difficultyChangeHandler =(id,difficulty)=>{
         const card = flashcards.find(c => c.id === id);
         if(card instanceof StudyFlashcard){
             card.difficulty  = difficulty;
-            updateFlashcard(id,card);
+            updateFlashcards(id,card);
         }
     }
 
@@ -31,7 +31,7 @@ const Dashboard =()=>{
         <div className="dashboard container mt-4">
             <h2 className="mb-4">Dashboard</h2>
 
-            {/* Create Falshcard form */}
+            {/* Create Flashcard form */}
             <div className="card mb-4">
                 <div className="card-body">
                     <h5 className="card-title">Create New Flashcard</h5>
@@ -51,17 +51,17 @@ const Dashboard =()=>{
             <div className="row row-cols-1 row-cols-md-2 g-4">
                 {flashcards.map((card)=>(
                     <div key={card.id} className="col">
-                        <div className={`card h-100 bortder-${getDifficultyColor(card.difficulty)}`}>
+                        <div className={`card h-100 border-${getDifficultyColor(card.difficulty)}`}>
                             <div className="card-body">
-                                <h5 className="catd-title">{card.question}</h5>
+                                <h5 className="card-title">{card.question}</h5>
                                 <div className="d-flex justify-content-between align-items-center mt-3">
-                                    <button className="btn btn-outliner-primary btn-sm" onClick={()=>studyHandler(card.id)}>
+                                    <button className="btn btn-outline-primary btn-sm" onClick={()=>studyHandler(card.id)}>
                                         Study
                                     </button>
                                     {card instanceof StudyFlashcard && (
                                         <select className={`form-select form-select-sm w-auto border-${getDifficultyColor(card.difficulty)}`}
                                         value={card.difficulty}
-                                        onChange={(e)=>difficultyChageHandler(card.id, e.target.value)}>
+                                        onChange={(e)=>difficultyChangeHandler(card.id, e.target.value)}>
                                             <option value="easy">Easy</option>
                                             <option value="medium">Medium</option>
                                             <option value="hard">Hard</option>
