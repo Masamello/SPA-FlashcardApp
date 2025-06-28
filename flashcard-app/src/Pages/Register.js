@@ -40,13 +40,36 @@ const Register = () => {
       return;
     }
 
-    // For demo purposes, create user directly
-    // In a real app, you would send this to a backend
-    const userData = {
-      email: formData.email,
-      name: formData.name,
-      id: Date.now().toString()
-    };
+    // Check if user already exists in localStorage
+    const existingUser = localStorage.getItem('flashcardAppUser');
+    let userData;
+
+    if (existingUser) {
+      const parsedUser = JSON.parse(existingUser);
+      // If same email, update existing user data (preserve profile info)
+      if (parsedUser.email === formData.email) {
+        userData = {
+          ...parsedUser,
+          name: formData.name, // Update name if changed
+          id: parsedUser.id // Keep existing ID
+        };
+        console.log('Updating existing user:', userData);
+      } else {
+        // Different email, create new user
+        userData = {
+          email: formData.email,
+          name: formData.name,
+          id: Date.now().toString()
+        };
+      }
+    } else {
+      // No existing user, create new one
+      userData = {
+        email: formData.email,
+        name: formData.name,
+        id: Date.now().toString()
+      };
+    }
 
     login(userData);
     navigate('/dashboard');

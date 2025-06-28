@@ -28,13 +28,32 @@ const Login = () => {
       return;
     }
 
-    // For demo purposes, accept any email/password combination
-    // In a real app, you would validate against a backend
-    const userData = {
-      email: formData.email,
-      name: formData.email.split('@')[0], // Use email prefix as name
-      id: Date.now().toString()
-    };
+    // Check if user already exists in localStorage
+    const existingUser = localStorage.getItem('flashcardAppUser');
+    let userData;
+
+    if (existingUser) {
+      const parsedUser = JSON.parse(existingUser);
+      // If same email, use existing user data (preserve profile info)
+      if (parsedUser.email === formData.email) {
+        userData = parsedUser;
+        console.log('Logging in existing user with profile:', userData);
+      } else {
+        // Different email, create new user
+        userData = {
+          email: formData.email,
+          name: formData.email.split('@')[0],
+          id: Date.now().toString()
+        };
+      }
+    } else {
+      // No existing user, create new one
+      userData = {
+        email: formData.email,
+        name: formData.email.split('@')[0],
+        id: Date.now().toString()
+      };
+    }
 
     login(userData);
     navigate('/dashboard');

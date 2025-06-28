@@ -14,6 +14,7 @@ const Profile = () =>{
     // currentUserが変更されたときにformDataを更新
     useEffect(() => {
         if (currentUser) {
+            console.log('Current user data:', currentUser); // デバッグ用
             setFormData({
                 name: currentUser.name || '',
                 birthday: currentUser.birthday || '',
@@ -25,6 +26,7 @@ const Profile = () =>{
 
     const submitHandler = (e)=>{
         e.preventDefault();
+        console.log('Submitting form data:', formData); // デバッグ用
         updateProfile(formData);
         alert('Profile updated successfully!');
     };
@@ -70,6 +72,12 @@ const Profile = () =>{
                                         {new Date(formData.birthday).toLocaleDateString()}
                                     </p>
                                 )}
+                                {formData.bio && (
+                                    <p>
+                                        <i className="bi bi-chat-quote me-2"></i>
+                                        {formData.bio}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -86,15 +94,30 @@ const Profile = () =>{
                                 <div className="row g-3">
                                     <div className="col-md-6">
                                         <label className="form-label">Full Name</label>
-                                        <input type="text" className="form-control" value={formData.name} onChange={(e)=>setFormData({...formData,name:e.target.value})}/>
+                                        <input 
+                                            type="text" 
+                                            className="form-control" 
+                                            value={formData.name} 
+                                            onChange={(e)=>setFormData({...formData,name:e.target.value})}
+                                            placeholder="Enter your full name"
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">Birthday</label>
-                                        <input type="date" className="form-control" value={formData.birthday} onChange={(e)=>setFormData({...formData, birthday:e.target.value})}/>
+                                        <input 
+                                            type="date" 
+                                            className="form-control" 
+                                            value={formData.birthday} 
+                                            onChange={(e)=>setFormData({...formData, birthday:e.target.value})}
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <label className="form-label">Gender</label>
-                                        <select className="form-select" value={formData.gender} onChange={(e)=>setFormData({...formData,gender:e.target.value})}>
+                                        <select 
+                                            className="form-select" 
+                                            value={formData.gender} 
+                                            onChange={(e)=>setFormData({...formData,gender:e.target.value})}
+                                        >
                                             <option value="">Select Gender</option>
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
@@ -103,8 +126,13 @@ const Profile = () =>{
                                     </div>
                                     <div className="col-12">
                                         <label className="form-label">Bio</label>
-                                        <textarea className="form-control" rows="3" value={formData.bio} onChange={(e)=>setFormData({...formData,bio:e.target.value})} placeholder="Tell us about yourself">
-                                        </textarea>
+                                        <textarea 
+                                            className="form-control" 
+                                            rows="3" 
+                                            value={formData.bio} 
+                                            onChange={(e)=>setFormData({...formData,bio:e.target.value})} 
+                                            placeholder="Tell us about yourself"
+                                        />
                                     </div>
                                     <div className="col-12">
                                         <button type="submit" className="btn btn-primary px-4">

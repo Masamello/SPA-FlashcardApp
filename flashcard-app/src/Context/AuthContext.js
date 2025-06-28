@@ -39,8 +39,16 @@ export const AuthProvider = ({ children }) => {
       email: currentUser.email,
       role: currentUser.role
     };
+    
+    // 状態を更新
     setCurrentUser(updatedUser);
+    
+    // localStorageに保存
     localStorage.setItem('flashcardAppUser', JSON.stringify(updatedUser));
+    
+    // デバッグ用：保存されたデータを確認
+    console.log('Profile updated:', updatedUser);
+    console.log('Saved to localStorage:', localStorage.getItem('flashcardAppUser'));
   };
 
   return (
