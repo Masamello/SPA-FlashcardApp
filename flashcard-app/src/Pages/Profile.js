@@ -14,7 +14,7 @@ const Profile = () =>{
     // currentUserが変更されたときにformDataを更新
     useEffect(() => {
         if (currentUser) {
-            console.log('Current user data:', currentUser); // デバッグ用
+            console.log('Current user data loaded:', currentUser); // デバッグ用
             setFormData({
                 name: currentUser.name || '',
                 birthday: currentUser.birthday || '',
@@ -78,6 +78,15 @@ const Profile = () =>{
                                         {formData.bio}
                                     </p>
                                 )}
+                            </div>
+                            {/* デバッグ情報表示 */}
+                            <div className="mt-3 p-2 bg-light rounded">
+                                <small className="text-muted">
+                                    <strong>Debug Info:</strong><br/>
+                                    Email: {currentUser.email}<br/>
+                                    ID: {currentUser.id}<br/>
+                                    Role: {currentUser.role}
+                                </small>
                             </div>
                         </div>
                     </div>

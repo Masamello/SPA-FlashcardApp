@@ -53,7 +53,7 @@ const Register = () => {
           name: formData.name, // Update name if changed
           id: parsedUser.id // Keep existing ID
         };
-        console.log('Updating existing user:', userData);
+        console.log('Updating existing user with preserved profile:', userData);
       } else {
         // Different email, create new user
         userData = {
@@ -61,6 +61,7 @@ const Register = () => {
           name: formData.name,
           id: Date.now().toString()
         };
+        console.log('Creating new user with different email:', userData);
       }
     } else {
       // No existing user, create new one
@@ -69,6 +70,7 @@ const Register = () => {
         name: formData.name,
         id: Date.now().toString()
       };
+      console.log('Creating new user (no existing data):', userData);
     }
 
     login(userData);

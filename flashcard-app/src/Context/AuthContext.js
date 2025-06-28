@@ -21,11 +21,14 @@ export const AuthProvider = ({ children }) => {
     };
     setCurrentUser(user);
     localStorage.setItem('flashcardAppUser', JSON.stringify(user));
+    console.log('User logged in:', user);
   };
 
   const logout = () => {
+    // ログアウト時は現在のユーザー状態のみをクリア
+    // localStorageのデータは保持して、プロフィール情報を維持
     setCurrentUser(null);
-    localStorage.removeItem('flashcardAppUser');
+    console.log('User logged out, but profile data preserved in localStorage');
   };
 
   const updateProfile = (profileData) => {

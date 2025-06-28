@@ -45,6 +45,7 @@ const Login = () => {
           name: formData.email.split('@')[0],
           id: Date.now().toString()
         };
+        console.log('Creating new user with different email:', userData);
       }
     } else {
       // No existing user, create new one
@@ -53,6 +54,7 @@ const Login = () => {
         name: formData.email.split('@')[0],
         id: Date.now().toString()
       };
+      console.log('Creating new user (no existing data):', userData);
     }
 
     login(userData);
