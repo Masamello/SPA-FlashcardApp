@@ -8,6 +8,7 @@ import Details from './Pages/Details';
 import Profile from './Pages/Profile';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import Categories from './Pages/Categories';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/flashcards/:id" element={<Details />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/categories" element={<Categories />} />
             </Routes>
           </div>
         </Router>
