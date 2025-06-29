@@ -25,8 +25,8 @@ A responsive, single-page flashcard learning application built with **React**, *
 
 * **Home Page** – Welcome screen with login/signup, and app overview.
 * **Dashboard** – Displays all flashcard sets created by the user.
-* **Details Page** – View and study an individual flashcard set.
-* **Profile Page** – (Authenticated Route) Manage user info, preferences, and saved sets.
+* **Ctegories Page** – View an individual flashcard separated by categories.
+* **Profile Page** – (Authenticated Route) Manage user info(birthday, gender,name) and saved sets.
 
 > Bonus: Includes logout functionality and potential for role-based features (e.g., admin controls)
 
@@ -45,8 +45,8 @@ A responsive, single-page flashcard learning application built with **React**, *
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Masamello/SPA-Flashcard.git
-   cd SPA-Flashcard
+   git clone https://github.com/Masamello/SPA-FlashcardApp.git
+   cd SPA-FlashcardApp
    ```
 
 2. Install dependencies:
