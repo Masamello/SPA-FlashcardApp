@@ -16,8 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     const user = {
-      ...userData,
-      role: userData.email === 'admin@example.com' ? 'admin' : 'user'
+      ...userData
     };
     setCurrentUser(user);
     localStorage.setItem('flashcardAppUser', JSON.stringify(user));
@@ -39,8 +38,7 @@ export const AuthProvider = ({ children }) => {
       ...profileData,
       // keep the existing important information
       id: currentUser.id,
-      email: currentUser.email,
-      role: currentUser.role
+      email: currentUser.email
     };
     
     // update the state

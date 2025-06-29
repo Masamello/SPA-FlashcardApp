@@ -34,14 +34,6 @@ const Home = () => {
           </div>
         )}
       </div>
-
-      {currentUser?.role === 'admin' && (
-        <div className="mt-4">
-          <Link to="/admin" className="btn btn-danger">
-            Admin Panel
-          </Link>
-        </div>
-      )}
     </div>
   );
 };
