@@ -1,18 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardContext } from '../Context/FlashcardContext';
-import { StudyFlashcard } from '../classes/StudyFlashCard';
 
 const Categories = () => {
     const { 
         flashcards, 
         categories, 
-        addFlashcard, 
         updateFlashcards, 
         deleteFlashcard,
         addCategory,
-        updateCategory,
-        deleteCategory,
         getCardsByCategory,
         getCardsByTag,
         getAllTags
@@ -22,12 +18,6 @@ const Categories = () => {
     const [selectedTag, setSelectedTag] = useState('all');
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', color: 'primary', description: '' });
-    const [newCard, setNewCard] = useState({ 
-        question: '', 
-        answer: '', 
-        category: selectedCategory !== 'all' ? selectedCategory : 'General',
-        tags: []
-    });
     const [newTag, setNewTag] = useState('');
     
     const navigate = useNavigate();
@@ -48,22 +38,6 @@ const Categories = () => {
         }
         
         return filteredCards;
-    };
-
-    const createHandler = () => {
-        const studyCard = new StudyFlashcard(newCard.question, newCard.answer, 'medium');
-        const cardWithCategory = {
-            ...studyCard,
-            category: newCard.category,
-            tags: newCard.tags
-        };
-        addFlashcard(cardWithCategory);
-        setNewCard({ 
-            question: '', 
-            answer: '', 
-            category: selectedCategory !== 'all' ? selectedCategory : 'General',
-            tags: []
-        });
     };
 
     const studyHandler = (id) => {
@@ -109,6 +83,7 @@ const Categories = () => {
 
     return (
         <div className="container mt-4">
+            <h2 className="mb-4">Categories & Tags</h2>
             <div className="row">
                 {/* サイドバー - カテゴリとタグ */}
                 <div className="col-md-3">
@@ -217,70 +192,6 @@ const Categories = () => {
                         </div>
                     )}
 
-                    {/* カード作成フォーム */}
-                    <div className="card mb-4">
-                        <div className="card-header">
-                            <h5 className="mb-0">Create New Flashcard</h5>
-                        </div>
-                        <div className="card-body">
-                            <div className="row g-3">
-                                <div className="col-md-6">
-                                    <label className="form-label">Question</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        value={newCard.question}
-                                        onChange={(e) => setNewCard({...newCard, question: e.target.value})}
-                                    />
-                                </div>
-                                <div className="col-md-6">
-                                    <label className="form-label">Category</label>
-                                    <select 
-                                        className="form-select"
-                                        value={newCard.category}
-                                        onChange={(e) => setNewCard({...newCard, category: e.target.value})}
-                                    >
-                                        {categories.map(category => (
-                                            <option key={category.id} value={category.id}>
-                                                {category.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="col-12">
-                                    <label className="form-label">Answer</label>
-                                    <textarea 
-                                        className="form-control" 
-                                        value={newCard.answer}
-                                        onChange={(e) => setNewCard({...newCard, answer: e.target.value})}
-                                    />
-                                </div>
-                                <div className="col-12">
-                                    <label className="form-label">Tags (comma separated)</label>
-                                    <input 
-                                        type="text" 
-                                        className="form-control" 
-                                        placeholder="e.g., important, exam, review"
-                                        value={newCard.tags.join(', ')}
-                                        onChange={(e) => setNewCard({
-                                            ...newCard, 
-                                            tags: e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag)
-                                        })}
-                                    />
-                                </div>
-                                <div className="col-12">
-                                    <button 
-                                        className="btn btn-primary"
-                                        onClick={createHandler}
-                                        disabled={!newCard.question || !newCard.answer}
-                                    >
-                                        Add Card
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     {/* カード一覧 */}
                     <div className="row row-cols-1 row-cols-md-2 g-4">
                         {filteredCards.map((card) => (
@@ -362,7 +273,11 @@ const Categories = () => {
                     {filteredCards.length === 0 && (
                         <div className="text-center py-5">
                             <h4 className="text-muted">No flashcards found</h4>
-                            <p className="text-muted">Try changing your filters or create a new flashcard.</p>
+                            <p className="text-muted">
+                                {selectedCategory !== 'all' || selectedTag !== 'all' 
+                                    ? 'Try changing your filters or create flashcards in the Dashboard.' 
+                                    : 'Create your first flashcard in the Dashboard!'}
+                            </p>
                         </div>
                     )}
                 </div>
