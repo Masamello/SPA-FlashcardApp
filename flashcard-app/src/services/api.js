@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// APIのベースURL（実際のAPIエンドポイントに合わせて変更してください）
-const API_BASE_URL = 'https://jsonplaceholder.typicode.com'; // テスト用のモックAPI
+// API Base URl(Need to chnage to an actual api end point)
+const API_BASE_URL = 'https://jsonplaceholder.typicode.com'; // Mock API for testting
 
-// axiosインスタンスの作成
+// Creating axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -12,13 +12,13 @@ const api = axios.create({
   },
 });
 
-// カテゴリ関連のAPI関数
+// API functions related to categories
 export const categoryAPI = {
-  // カテゴリ一覧を取得
+  // Get categories
   getCategories: async () => {
     try {
-      // 実際のAPIでは: const response = await api.get('/categories');
-      // テスト用にモックデータを返す
+      // In actual API: const response = await api.get('/categories');
+      // For testing, return mock data
       const mockCategories = [
         { id: '1', name: 'General', color: 'primary', description: 'General flashcards' },
         { id: '2', name: 'Study', color: 'success', description: 'Study materials' },
@@ -32,10 +32,10 @@ export const categoryAPI = {
     }
   },
 
-  // カテゴリを追加
+  // Add category
   createCategory: async (categoryData) => {
     try {
-      // 実際のAPIでは: const response = await api.post('/categories', categoryData);
+      // In actual API: const response = await api.post('/categories', categoryData);
       const newCategory = {
         ...categoryData,
         id: Date.now().toString(),
@@ -48,10 +48,10 @@ export const categoryAPI = {
     }
   },
 
-  // カテゴリを更新
+  // Update category
   updateCategory: async (id, categoryData) => {
     try {
-      // 実際のAPIでは: const response = await api.put(`/categories/${id}`, categoryData);
+      // In actual API: const response = await api.put(`/categories/${id}`, categoryData);
       const updatedCategory = {
         ...categoryData,
         id,
@@ -64,10 +64,10 @@ export const categoryAPI = {
     }
   },
 
-  // カテゴリを削除
+  // Delete category
   deleteCategory: async (id) => {
     try {
-      // 実際のAPIでは: const response = await api.delete(`/categories/${id}`);
+      // In actual API: const response = await api.delete(`/categories/${id}`);
       return { data: { id } };
     } catch (error) {
       console.error('Error deleting category:', error);
