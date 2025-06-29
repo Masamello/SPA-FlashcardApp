@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect, useContext } from "react";
+import { categoryAPI } from "../services/api";
 
 export const FlashcardContext = createContext();
 
@@ -6,21 +7,32 @@ export const FlashcardProvider = ({children}) =>{
     const[flashcards,setFlashcards] = useState([]);
     const[categories,setCategories] = useState([]);
     const[isLoading,setIsLoading] = useState(true);
+    const[categoryLoading,setCategoryLoading] = useState(true);
 
-    //loading flashcards and categories from localStorage
+    //loading flashcards from localStorage
     useEffect(()=>{
-        const loadData =()=>{
+        const loadFlashcards =()=>{
             const storeCards = localStorage.getItem('flashcards');
-            const storeCategories = localStorage.getItem('flashcardCategories');
             
             if(storeCards !== null){
                 setFlashcards(JSON.parse(storeCards));
             }
             
-            if(storeCategories !== null){
-                setCategories(JSON.parse(storeCategories));
-            } else {
-                // デフォルトカテゴリを設定
+            setIsLoading(false);
+        };
+        loadFlashcards();
+    },[]);
+
+    //loading categories from API
+    useEffect(()=>{
+        const loadCategories = async () => {
+            try {
+                setCategoryLoading(true);
+                const response = await categoryAPI.getCategories();
+                setCategories(response.data);
+            } catch (error) {
+                console.error('Failed to load categories:', error);
+                // エラー時はデフォルトカテゴリを設定
                 const defaultCategories = [
                     { id: '1', name: 'General', color: 'primary', description: 'General flashcards' },
                     { id: '2', name: 'Study', color: 'success', description: 'Study materials' },
@@ -28,23 +40,17 @@ export const FlashcardProvider = ({children}) =>{
                     { id: '4', name: 'Personal', color: 'info', description: 'Personal notes' }
                 ];
                 setCategories(defaultCategories);
-                localStorage.setItem('flashcardCategories', JSON.stringify(defaultCategories));
+            } finally {
+                setCategoryLoading(false);
             }
-            
-            setIsLoading(false);
         };
-        loadData();
+        loadCategories();
     },[]);
 
     //saving flashcards when every time flashcards update
     useEffect(()=>{
         localStorage.setItem('flashcards',JSON.stringify(flashcards));
     },[flashcards]);
-
-    //saving categories when every time categories update
-    useEffect(()=>{
-        localStorage.setItem('flashcardCategories',JSON.stringify(categories));
-    },[categories]);
 
     const addFlashcard = (flashcard) => {
         setFlashcards(prev => [...prev,{
@@ -67,32 +73,47 @@ export const FlashcardProvider = ({children}) =>{
         setFlashcards(prev => prev.filter(card => card.id !== id))
     };
 
-    // functions related to categories
-    const addCategory = (category) => {
-        const newCategory = {
-            ...category,
-            id: Date.now().toString(),
-            createdAt: new Date().toISOString()
-        };
-        setCategories(prev => [...prev, newCategory]);
+    // functions related to categories - now using API
+    const addCategory = async (category) => {
+        try {
+            const response = await categoryAPI.createCategory(category);
+            setCategories(prev => [...prev, response.data]);
+            return response.data;
+        } catch (error) {
+            console.error('Failed to add category:', error);
+            throw error;
+        }
     };
 
-    const updateCategory = (id, updates) => {
-        setCategories(prev =>
-            prev.map(cat =>
-                cat.id === id ? {...cat, ...updates} : cat
-            )
-        );
+    const updateCategory = async (id, updates) => {
+        try {
+            const response = await categoryAPI.updateCategory(id, updates);
+            setCategories(prev =>
+                prev.map(cat =>
+                    cat.id === id ? response.data : cat
+                )
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Failed to update category:', error);
+            throw error;
+        }
     };
 
-    const deleteCategory = (id) => {
-        setCategories(prev => prev.filter(cat => cat.id !== id));
-        // moving the cards in the deleted category to the General category
-        setFlashcards(prev =>
-            prev.map(card =>
-                card.category === id ? {...card, category: 'General'} : card
-            )
-        );
+    const deleteCategory = async (id) => {
+        try {
+            await categoryAPI.deleteCategory(id);
+            setCategories(prev => prev.filter(cat => cat.id !== id));
+            // moving the cards in the deleted category to the General category
+            setFlashcards(prev =>
+                prev.map(card =>
+                    card.category === id ? {...card, category: 'General'} : card
+                )
+            );
+        } catch (error) {
+            console.error('Failed to delete category:', error);
+            throw error;
+        }
     };
 
     // get the cards in the category
@@ -104,7 +125,7 @@ export const FlashcardProvider = ({children}) =>{
         <FlashcardContext.Provider value={{
             flashcards,
             categories,
-            isLoading,
+            isLoading: isLoading || categoryLoading,
             addFlashcard,
             updateFlashcards,
             deleteFlashcard,
