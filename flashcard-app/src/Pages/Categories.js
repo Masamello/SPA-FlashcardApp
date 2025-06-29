@@ -5,8 +5,7 @@ import { FlashcardContext } from '../Context/FlashcardContext';
 const Categories = () => {
     const { 
         flashcards, 
-        categories, 
-        updateFlashcards, 
+        categories,  
         deleteFlashcard,
         addCategory,
         getCardsByCategory
@@ -18,7 +17,7 @@ const Categories = () => {
     
     const navigate = useNavigate();
 
-    // 表示するカードをフィルタリング
+    // filter the cards to display
     const getFilteredCards = () => {
         if (selectedCategory === 'all') {
             return flashcards;
@@ -53,7 +52,7 @@ const Categories = () => {
         <div className="container mt-4">
             <h2 className="mb-4">Categories</h2>
             <div className="row">
-                {/* サイドバー - カテゴリ */}
+                {/* sidebar - categories */}
                 <div className="col-md-3">
                     <div className="card mb-4">
                         <div className="card-header">
@@ -87,9 +86,9 @@ const Categories = () => {
                     </div>
                 </div>
 
-                {/* メインコンテンツ */}
+                {/* main content */}
                 <div className="col-md-9">
-                    {/* カテゴリ追加フォーム */}
+                    {/* add category form */}
                     {showAddCategory && (
                         <div className="card mb-4">
                             <div className="card-header">
@@ -135,7 +134,7 @@ const Categories = () => {
                         </div>
                     )}
 
-                    {/* カード一覧 */}
+                    {/* card list */}
                     <div className="row row-cols-1 row-cols-md-2 g-4">
                         {filteredCards.map((card) => (
                             <div key={card.id} className="col">

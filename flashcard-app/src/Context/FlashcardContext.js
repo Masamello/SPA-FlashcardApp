@@ -67,7 +67,7 @@ export const FlashcardProvider = ({children}) =>{
         setFlashcards(prev => prev.filter(card => card.id !== id))
     };
 
-    // カテゴリ関連の関数
+    // functions related to categories
     const addCategory = (category) => {
         const newCategory = {
             ...category,
@@ -87,7 +87,7 @@ export const FlashcardProvider = ({children}) =>{
 
     const deleteCategory = (id) => {
         setCategories(prev => prev.filter(cat => cat.id !== id));
-        // そのカテゴリのカードをGeneralカテゴリに移動
+        // moving the cards in the deleted category to the General category
         setFlashcards(prev =>
             prev.map(card =>
                 card.category === id ? {...card, category: 'General'} : card
@@ -95,7 +95,7 @@ export const FlashcardProvider = ({children}) =>{
         );
     };
 
-    // カテゴリ別のカードを取得
+    // get the cards in the category
     const getCardsByCategory = (categoryId) => {
         return flashcards.filter(card => card.category === categoryId);
     };

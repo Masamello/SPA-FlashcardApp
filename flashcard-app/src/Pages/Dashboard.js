@@ -1,8 +1,7 @@
-import React,{useContext,useState,useEffect} from "react";
+import React,{useContext,useState} from "react";
 import { FlashcardContext } from "../Context/FlashcardContext";
 import {useNavigate} from "react-router-dom";
 import { StudyFlashcard } from "../classes/StudyFlashCard";
-import { useFlashcards } from "../Context/FlashcardContext";
 
 const Dashboard =()=>{
     const { flashcards, categories, addFlashcard, updateFlashcards} = useContext(FlashcardContext);
