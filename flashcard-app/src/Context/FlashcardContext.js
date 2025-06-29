@@ -51,8 +51,7 @@ export const FlashcardProvider = ({children}) =>{
             ...flashcard,
             id: Date.now().toString(),
             createdAt: new Date().toISOString(),
-            category: flashcard.category || 'General',
-            tags: flashcard.tags || []
+            category: flashcard.category || 'General'
         }]);
     }
 
@@ -101,24 +100,6 @@ export const FlashcardProvider = ({children}) =>{
         return flashcards.filter(card => card.category === categoryId);
     };
 
-    // タグ別のカードを取得
-    const getCardsByTag = (tag) => {
-        return flashcards.filter(card => 
-            card.tags && card.tags.includes(tag)
-        );
-    };
-
-    // すべてのタグを取得
-    const getAllTags = () => {
-        const allTags = new Set();
-        flashcards.forEach(card => {
-            if (card.tags) {
-                card.tags.forEach(tag => allTags.add(tag));
-            }
-        });
-        return Array.from(allTags);
-    };
-
     return(
         <FlashcardContext.Provider value={{
             flashcards,
@@ -130,9 +111,7 @@ export const FlashcardProvider = ({children}) =>{
             addCategory,
             updateCategory,
             deleteCategory,
-            getCardsByCategory,
-            getCardsByTag,
-            getAllTags
+            getCardsByCategory
         }}>
             {children}
         </FlashcardContext.Provider>

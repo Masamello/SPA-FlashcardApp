@@ -9,8 +9,7 @@ const Dashboard =()=>{
     const [newCard, setNewCard] = useState({ 
         question: "", 
         answer: "",
-        category: "General",
-        tags: []
+        category: "General"
     });
     const navigate = useNavigate();
 
@@ -18,15 +17,13 @@ const Dashboard =()=>{
         const studyCard = new StudyFlashcard(newCard.question, newCard.answer,'medium');
         const cardWithCategory = {
             ...studyCard,
-            category: newCard.category,
-            tags: newCard.tags
+            category: newCard.category
         };
         addFlashcard(cardWithCategory);
         setNewCard({
             question:'',
             answer:'',
-            category: "General",
-            tags: []
+            category: "General"
         });
     };
 
@@ -96,19 +93,6 @@ const Dashboard =()=>{
                             />
                         </div>
                         <div className="col-12">
-                            <label className="form-label">Tags (comma separated)</label>
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                placeholder="e.g., important, exam, review"
-                                value={newCard.tags.join(', ')}
-                                onChange={(e) => setNewCard({
-                                    ...newCard, 
-                                    tags: e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag)
-                                })}
-                            />
-                        </div>
-                        <div className="col-12">
                             <button 
                                 className="btn btn-primary" 
                                 onClick={createHandler} 
@@ -133,17 +117,6 @@ const Dashboard =()=>{
                                         {categories.find(c => c.id === card.category)?.name || 'General'}
                                     </span>
                                 </div>
-                                
-                                {/* タグ表示 */}
-                                {card.tags && card.tags.length > 0 && (
-                                    <div className="mb-3">
-                                        {card.tags.map(tag => (
-                                            <span key={tag} className="badge bg-secondary me-1">
-                                                #{tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                )}
                                 
                                 <div className="d-flex justify-content-between align-items-center mt-3">
                                     <button className="btn btn-outline-primary btn-sm" onClick={()=>studyHandler(card.id)}>

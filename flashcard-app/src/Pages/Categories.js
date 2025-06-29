@@ -9,35 +9,21 @@ const Categories = () => {
         updateFlashcards, 
         deleteFlashcard,
         addCategory,
-        getCardsByCategory,
-        getCardsByTag,
-        getAllTags
+        getCardsByCategory
     } = useContext(FlashcardContext);
     
     const [selectedCategory, setSelectedCategory] = useState('all');
-    const [selectedTag, setSelectedTag] = useState('all');
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', color: 'primary', description: '' });
-    const [newTag, setNewTag] = useState('');
     
     const navigate = useNavigate();
-    const allTags = getAllTags();
 
     // 表示するカードをフィルタリング
     const getFilteredCards = () => {
-        let filteredCards = flashcards;
-        
-        if (selectedCategory !== 'all') {
-            filteredCards = getCardsByCategory(selectedCategory);
+        if (selectedCategory === 'all') {
+            return flashcards;
         }
-        
-        if (selectedTag !== 'all') {
-            filteredCards = filteredCards.filter(card => 
-                card.tags && card.tags.includes(selectedTag)
-            );
-        }
-        
-        return filteredCards;
+        return getCardsByCategory(selectedCategory);
     };
 
     const studyHandler = (id) => {
@@ -49,24 +35,6 @@ const Categories = () => {
             addCategory(newCategory);
             setNewCategory({ name: '', color: 'primary', description: '' });
             setShowAddCategory(false);
-        }
-    };
-
-    const addTagToCard = (cardId, tag) => {
-        if (tag.trim()) {
-            const card = flashcards.find(c => c.id === cardId);
-            if (card) {
-                const updatedTags = [...(card.tags || []), tag.trim()];
-                updateFlashcards(cardId, { tags: updatedTags });
-            }
-        }
-    };
-
-    const removeTagFromCard = (cardId, tagToRemove) => {
-        const card = flashcards.find(c => c.id === cardId);
-        if (card && card.tags) {
-            const updatedTags = card.tags.filter(tag => tag !== tagToRemove);
-            updateFlashcards(cardId, { tags: updatedTags });
         }
     };
 
@@ -83,9 +51,9 @@ const Categories = () => {
 
     return (
         <div className="container mt-4">
-            <h2 className="mb-4">Categories & Tags</h2>
+            <h2 className="mb-4">Categories</h2>
             <div className="row">
-                {/* サイドバー - カテゴリとタグ */}
+                {/* サイドバー - カテゴリ */}
                 <div className="col-md-3">
                     <div className="card mb-4">
                         <div className="card-header">
@@ -115,31 +83,6 @@ const Categories = () => {
                             >
                                 {showAddCategory ? 'Cancel' : 'Add Category'}
                             </button>
-                        </div>
-                    </div>
-
-                    <div className="card mb-4">
-                        <div className="card-header">
-                            <h5 className="mb-0">Tags</h5>
-                        </div>
-                        <div className="card-body">
-                            <div className="mb-3">
-                                <button 
-                                    className={`btn btn-sm w-100 mb-2 ${selectedTag === 'all' ? 'btn-secondary' : 'btn-outline-secondary'}`}
-                                    onClick={() => setSelectedTag('all')}
-                                >
-                                    All Tags
-                                </button>
-                                {allTags.map(tag => (
-                                    <button 
-                                        key={tag}
-                                        className={`btn btn-sm w-100 mb-2 ${selectedTag === tag ? 'btn-secondary' : 'btn-outline-secondary'}`}
-                                        onClick={() => setSelectedTag(tag)}
-                                    >
-                                        #{tag} ({getCardsByTag(tag).length})
-                                    </button>
-                                ))}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -205,51 +148,6 @@ const Categories = () => {
                                             </span>
                                         </div>
                                         
-                                        {/* タグ表示 */}
-                                        {card.tags && card.tags.length > 0 && (
-                                            <div className="mb-3">
-                                                {card.tags.map(tag => (
-                                                    <span 
-                                                        key={tag} 
-                                                        className="badge bg-secondary me-1"
-                                                        style={{cursor: 'pointer'}}
-                                                        onClick={() => removeTagFromCard(card.id, tag)}
-                                                        title="Click to remove tag"
-                                                    >
-                                                        #{tag} ×
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-                                        
-                                        {/* タグ追加 */}
-                                        <div className="mb-3">
-                                            <div className="input-group input-group-sm">
-                                                <input 
-                                                    type="text" 
-                                                    className="form-control" 
-                                                    placeholder="Add tag"
-                                                    value={newTag}
-                                                    onChange={(e) => setNewTag(e.target.value)}
-                                                    onKeyPress={(e) => {
-                                                        if (e.key === 'Enter') {
-                                                            addTagToCard(card.id, newTag);
-                                                            setNewTag('');
-                                                        }
-                                                    }}
-                                                />
-                                                <button 
-                                                    className="btn btn-outline-secondary"
-                                                    onClick={() => {
-                                                        addTagToCard(card.id, newTag);
-                                                        setNewTag('');
-                                                    }}
-                                                >
-                                                    Add
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
                                         <div className="d-flex justify-content-between align-items-center">
                                             <button 
                                                 className="btn btn-outline-primary btn-sm"
@@ -274,8 +172,8 @@ const Categories = () => {
                         <div className="text-center py-5">
                             <h4 className="text-muted">No flashcards found</h4>
                             <p className="text-muted">
-                                {selectedCategory !== 'all' || selectedTag !== 'all' 
-                                    ? 'Try changing your filters or create flashcards in the Dashboard.' 
+                                {selectedCategory !== 'all' 
+                                    ? 'Try changing your filter or create flashcards in the Dashboard.' 
                                     : 'Create your first flashcard in the Dashboard!'}
                             </p>
                         </div>
