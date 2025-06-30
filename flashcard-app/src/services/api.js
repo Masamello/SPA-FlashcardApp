@@ -26,7 +26,6 @@ export const flashcardAPI = {
         answer: post.body.substring(0, 100),
         category: ['General', 'Study', 'Work', 'Personal'][index % 4],
         createdAt: new Date().toISOString(),
-        studyCount: Math.floor(Math.random() * 10) + 1,
         lastStudied: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
       }));
       

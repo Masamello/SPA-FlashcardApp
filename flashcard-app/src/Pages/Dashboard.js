@@ -162,10 +162,7 @@ const Dashboard =()=>{
                                             <button className="btn btn-outline-primary btn-sm" onClick={()=>studyHandler(card.id)}>
                                                 Study
                                             </button>
-                                            <div className="text-muted small">
-                                                <i className="bi bi-eye me-1"></i>
-                                                {card.studyCount || 0} times
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

@@ -83,7 +83,6 @@ export const FlashcardProvider = ({children}) =>{
                 ...flashcard,
                 id: Date.now().toString(),
                 createdAt: new Date().toISOString(),
-                studyCount: 0,
                 lastStudied: null
             };
             setFlashcards(prev => [...prev, localCard]);
