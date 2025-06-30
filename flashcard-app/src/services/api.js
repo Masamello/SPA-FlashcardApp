@@ -49,7 +49,6 @@ export const flashcardAPI = {
         ...flashcardData,
         id: response.data.id.toString(),
         createdAt: new Date().toISOString(),
-        studyCount: 0,
         lastStudied: null
       };
       
