@@ -7,13 +7,10 @@ const Categories = () => {
         flashcards, 
         categories,  
         deleteFlashcard,
-        addCategory,
         getCardsByCategory
     } = useContext(FlashcardContext);
     
     const [selectedCategory, setSelectedCategory] = useState('all');
-    const [showAddCategory, setShowAddCategory] = useState(false);
-    const [newCategory, setNewCategory] = useState({ name: '', color: 'primary', description: '' });
     
     const navigate = useNavigate();
 
@@ -27,23 +24,6 @@ const Categories = () => {
 
     const studyHandler = (id) => {
         navigate(`/flashcards/${id}`);
-    };
-
-    const addCategoryHandler = () => {
-        if (newCategory.name.trim()) {
-            addCategory(newCategory);
-            setNewCategory({ name: '', color: 'primary', description: '' });
-            setShowAddCategory(false);
-        }
-    };
-
-    const getDifficultyColor = (difficulty) => {
-        switch(difficulty){
-            case 'easy': return 'success';
-            case 'medium': return 'warning';
-            case 'hard': return 'danger';
-            default: return 'primary';
-        }
     };
 
     const filteredCards = getFilteredCards();
@@ -76,69 +56,17 @@ const Categories = () => {
                                     </button>
                                 ))}
                             </div>
-                            <button 
-                                className="btn btn-outline-secondary btn-sm w-100"
-                                onClick={() => setShowAddCategory(!showAddCategory)}
-                            >
-                                {showAddCategory ? 'Cancel' : 'Add Category'}
-                            </button>
                         </div>
                     </div>
                 </div>
 
                 {/* main content */}
                 <div className="col-md-9">
-                    {/* add category form */}
-                    {showAddCategory && (
-                        <div className="card mb-4">
-                            <div className="card-header">
-                                <h5 className="mb-0">Add New Category</h5>
-                            </div>
-                            <div className="card-body">
-                                <div className="row g-3">
-                                    <div className="col-md-6">
-                                        <label className="form-label">Category Name</label>
-                                        <input 
-                                            type="text" 
-                                            className="form-control" 
-                                            value={newCategory.name}
-                                            onChange={(e) => setNewCategory({...newCategory, name: e.target.value})}
-                                        />
-                                    </div>
-                                    <div className="col-md-3">
-                                        <label className="form-label">Color</label>
-                                        <select 
-                                            className="form-select"
-                                            value={newCategory.color}
-                                            onChange={(e) => setNewCategory({...newCategory, color: e.target.value})}
-                                        >
-                                            <option value="primary">Primary</option>
-                                            <option value="success">Success</option>
-                                            <option value="warning">Warning</option>
-                                            <option value="danger">Danger</option>
-                                            <option value="info">Info</option>
-                                            <option value="secondary">Secondary</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <label className="form-label">&nbsp;</label>
-                                        <button 
-                                            className="btn btn-primary w-100"
-                                            onClick={addCategoryHandler}
-                                        >
-                                            Add Category
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
                     {/* card list */}
                     <div className="row row-cols-1 row-cols-md-2 g-4">
                         {filteredCards.map((card) => (
                             <div key={card.id} className="col">
-                                <div className={`card h-100 border-${getDifficultyColor(card.difficulty)}`}>
+                                <div className="card h-100">
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between align-items-start mb-2">
                                             <h5 className="card-title">{card.question}</h5>
