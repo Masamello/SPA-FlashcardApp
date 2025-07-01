@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// 無料のAPIサービス（JSONPlaceholder）を使用
+// Using JSONPlaceholder API
 const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
 
-// axiosインスタンスの作成
+// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -12,14 +12,14 @@ const api = axios.create({
   },
 });
 
-// フラッシュカード関連のAPI関数
+// Flashcard related API functions
 export const flashcardAPI = {
-  // フラッシュカード一覧を取得（GET）
+  // Get flashcard list (GET)
   getFlashcards: async () => {
     try {
       const response = await api.get('/posts?_limit=10');
       
-      // レスポンスデータをフラッシュカード形式に変換
+      // Convert response data to flashcard format
       const flashcards = response.data.map((post, index) => ({
         id: post.id.toString(),
         question: `Question ${post.id}: ${post.title.substring(0, 50)}`,
@@ -36,7 +36,7 @@ export const flashcardAPI = {
     }
   },
 
-  // 新しいフラッシュカードを追加（POST）
+  // Add new flashcard (POST)
   createFlashcard: async (flashcardData) => {
     try {
       const response = await api.post('/posts', {
@@ -59,12 +59,12 @@ export const flashcardAPI = {
     }
   },
 
-  // 学習統計を取得（GET）
+  // Get study statistics (GET)
   getStudyStats: async () => {
     try {
       const response = await api.get('/posts?_limit=5');
       
-      // 学習統計データを生成
+      // Generate study statistics data
       const stats = {
         totalCards: response.data.length,
         studiedToday: Math.floor(Math.random() * 5) + 1,
@@ -80,7 +80,7 @@ export const flashcardAPI = {
   }
 };
 
-// カテゴリ関連のAPI関数（GETのみ）
+// Category related API functions (GET only)
 export const categoryAPI = {
   getCategories: async () => {
     try {
@@ -102,7 +102,7 @@ export const categoryAPI = {
   }
 };
 
-// 追加のAPI関数：ユーザー情報を取得（GETのみ）
+// Additional API functions: Get user information (GET only)
 export const userAPI = {
   getUserInfo: async (userId = 1) => {
     try {
@@ -115,9 +115,9 @@ export const userAPI = {
   }
 };
 
-// 追加のAPI関数：写真データを取得（photosエンドポイントを使用）
+  // Additional API functions: Get photo data (using photos endpoint)
 export const photoAPI = {
-  // 写真一覧を取得（フラッシュカードのサムネイルとして使用可能）
+  // Get photo list (can be used as flashcard thumbnail)
   getPhotos: async (limit = 10) => {
     try {
       const response = await api.get(`/photos?_limit=${limit}`);

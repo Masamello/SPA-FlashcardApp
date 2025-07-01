@@ -24,6 +24,7 @@ const Dashboard =()=>{
             answer:'',
             category: "General"
         });
+        alert('Flashcard created successfully!')
     };
 
     const studyHandler =(id) =>{
@@ -51,7 +52,7 @@ const Dashboard =()=>{
                     <div className="card-header">
                         <h5 className="mb-0">
                             <i className="bi bi-graph-up me-2"></i>
-                            Study Statistics (API Data)
+                            Study Statistics
                         </h5>
                     </div>
                     <div className="card-body">
@@ -76,9 +77,7 @@ const Dashboard =()=>{
                             </div>
                         </div>
                         <div className="mt-2">
-                            <small className="text-muted">
-                                Statistics fetched from API using GET method
-                            </small>
+                            
                         </div>
                     </div>
                 </div>
@@ -126,7 +125,7 @@ const Dashboard =()=>{
                                 onClick={createHandler} 
                                 disabled={!newCard.question || !newCard.answer}
                             >
-                                Add Card (POST to API)
+                                Add Card
                             </button>
                         </div>
                     </div>
@@ -138,7 +137,7 @@ const Dashboard =()=>{
                 <div className="card-header">
                     <h5 className="mb-0">
                         <i className="bi bi-collection me-2"></i>
-                        Flashcards (Loaded from API)
+                        Flashcards
                     </h5>
                 </div>
                 <div className="card-body">
