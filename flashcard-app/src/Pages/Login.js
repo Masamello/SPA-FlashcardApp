@@ -28,37 +28,18 @@ const Login = () => {
       return;
     }
 
-    // Check if user already exists in localStorage
-    const existingUser = localStorage.getItem('flashcardAppUser');
-    let userData;
+    // ユーザー配列を取得
+    const users = JSON.parse(localStorage.getItem('flashcardAppUsers') || '[]');
+    const foundUser = users.find(
+      (user) => user.email === formData.email && user.password === formData.password
+    );
 
-    if (existingUser) {
-      const parsedUser = JSON.parse(existingUser);
-      // If same email, use existing user data (preserve profile info)
-      if (parsedUser.email === formData.email) {
-        userData = parsedUser;
-        console.log('Logging in existing user with profile:', userData);
-      } else {
-        // Different email, create new user
-        userData = {
-          email: formData.email,
-          name: formData.email.split('@')[0],
-          id: Date.now().toString()
-        };
-        console.log('Creating new user with different email:', userData);
-      }
+    if (foundUser) {
+      login(foundUser);
+      navigate('/dashboard');
     } else {
-      // No existing user, create new one
-      userData = {
-        email: formData.email,
-        name: formData.email.split('@')[0],
-        id: Date.now().toString()
-      };
-      console.log('Creating new user (no existing data):', userData);
+      setError('Email or password is incorrect');
     }
-
-    login(userData);
-    navigate('/dashboard');
   };
 
   return (

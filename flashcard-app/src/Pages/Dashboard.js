@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import { StudyFlashcard } from "../classes/StudyFlashCard";
 
 const Dashboard =()=>{
-    const { flashcards, categories, studyStats, addFlashcard, updateFlashcards, isLoading} = useContext(FlashcardContext);
+    const { flashcards, categories, studyStats, addFlashcard, isLoading} = useContext(FlashcardContext);
     const [newCard, setNewCard] = useState({ 
         question: "", 
         answer: "",

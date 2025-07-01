@@ -40,40 +40,26 @@ const Register = () => {
       return;
     }
 
-    // Check if user already exists in localStorage
-    const existingUser = localStorage.getItem('flashcardAppUser');
-    let userData;
+    // ユーザー配列を取得
+    const users = JSON.parse(localStorage.getItem('flashcardAppUsers') || '[]');
+    const userExists = users.some((user) => user.email === formData.email);
 
-    if (existingUser) {
-      const parsedUser = JSON.parse(existingUser);
-      // If same email, update existing user data (preserve profile info)
-      if (parsedUser.email === formData.email) {
-        userData = {
-          ...parsedUser,
-          name: formData.name, // Update name if changed
-          id: parsedUser.id // Keep existing ID
-        };
-        console.log('Updating existing user with preserved profile:', userData);
-      } else {
-        // Different email, create new user
-        userData = {
-          email: formData.email,
-          name: formData.name,
-          id: Date.now().toString()
-        };
-        console.log('Creating new user with different email:', userData);
-      }
-    } else {
-      // No existing user, create new one
-      userData = {
-        email: formData.email,
-        name: formData.name,
-        id: Date.now().toString()
-      };
-      console.log('Creating new user (no existing data):', userData);
+    if (userExists) {
+      setError('This email is already registered');
+      return;
     }
 
-    login(userData);
+    // 新しいユーザーを作成
+    const newUser = {
+      email: formData.email,
+      name: formData.name,
+      password: formData.password,
+      id: Date.now().toString()
+    };
+
+    users.push(newUser);
+    localStorage.setItem('flashcardAppUsers', JSON.stringify(users));
+    login(newUser);
     navigate('/dashboard');
   };
 
