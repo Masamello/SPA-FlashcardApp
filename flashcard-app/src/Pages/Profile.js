@@ -11,7 +11,7 @@ const Profile = () =>{
         bio: ''
     });
 
-    // currentUserが変更されたときにformDataを更新
+    // Update formData when currentUser changes
     useEffect(() => {
         if (currentUser) {
             console.log('Current user data loaded:', currentUser); // for debugging
@@ -31,7 +31,7 @@ const Profile = () =>{
         alert('Profile updated successfully!');
     };
 
-    // ユーザーがログインしていない場合
+    // If user is not logged in
     if (!currentUser) {
         return (
             <div className="container mt-4">
@@ -49,15 +49,7 @@ const Profile = () =>{
                 <div className="col-lg mb-4">
                     <div className="card profile-card">
                         <div className="card-body text-center">
-                            <div className="profile-avatar mb-3">
-                                {formData.gender ==='male'?(
-                                    <i className="bi bi-person-circle display-4 text-primary"></i>
-                                ):formData.gender === 'female'?(
-                                    <i className="bi bi-person-circle display-4 text-danger"></i>
-                                ):(
-                                    <i className="bi bi-person-circle display-4 text-secondary"></i>
-                                )}
-                            </div>
+                            
                             <h3 className="profile-name">{formData.name || 'Anonymous'}</h3>
                             <p className="text-muted">Flashcard Learner</p>
                             <hr/>
@@ -82,7 +74,7 @@ const Profile = () =>{
                             {/* show debug info */}
                             <div className="mt-3 p-2 bg-light rounded">
                                 <small className="text-muted">
-                                    <strong>Debug Info:</strong><br/>
+                                    <strong>Info:</strong><br/>
                                     Email: {currentUser.email}<br/>
                                     ID: {currentUser.id}
                                 </small>
