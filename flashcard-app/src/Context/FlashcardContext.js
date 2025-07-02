@@ -13,7 +13,7 @@ export const FlashcardProvider = ({children}) =>{
     const[categoryLoading,setCategoryLoading] = useState(true);
     const[statsLoading,setStatsLoading] = useState(true);
 
-    // APIからフラッシュカードデータを取得（GET）
+    // Getting flashcards from API
     useEffect(()=>{
         const loadFlashcards = async () => {
             if (!currentUser) {
@@ -27,7 +27,7 @@ export const FlashcardProvider = ({children}) =>{
                 setFlashcards(response.data);
             } catch (error) {
                 console.error('Failed to load flashcards from API:', error);
-                // エラー時はユーザーごとのlocalStorageから取得
+                // When error, get flashcards from localStorage
                 const localCards = JSON.parse(localStorage.getItem('flashcardAppFlashcards_' + currentUser.id) || '[]');
                 setFlashcards(localCards);
             } finally {
@@ -35,10 +35,10 @@ export const FlashcardProvider = ({children}) =>{
             }
         };
         loadFlashcards();
-        // currentUserが変わるたびに再取得
+        // When currentUser changes, reload flashcards
     },[currentUser]);
 
-    // APIからカテゴリデータを取得（GET）
+    // Get category data from API (GET)
     useEffect(()=>{
         const loadCategories = async () => {
             try {
@@ -47,7 +47,7 @@ export const FlashcardProvider = ({children}) =>{
                 setCategories(response.data);
             } catch (error) {
                 console.error('Failed to load categories:', error);
-                // エラー時はデフォルトカテゴリを設定
+                // When error, set default categories
                 const defaultCategories = [
                     { id: '1', name: 'General', color: 'primary', description: 'General flashcards' },
                     { id: '2', name: 'Study', color: 'success', description: 'Study materials' },
@@ -62,7 +62,7 @@ export const FlashcardProvider = ({children}) =>{
         loadCategories();
     },[]);
 
-    // APIから学習統計を取得（GET）
+    // Get study stats from API (GET)
     useEffect(()=>{
         const loadStudyStats = async () => {
             try {
@@ -79,21 +79,21 @@ export const FlashcardProvider = ({children}) =>{
         loadStudyStats();
     },[]);
 
-    // 新しいフラッシュカードを追加（POST）
+    // Add new flashcard (POST)
     const addFlashcard = async (flashcard) => {
         if (!currentUser) return null;
         try {
             const response = await flashcardAPI.createFlashcard(flashcard);
             setFlashcards(prev => {
                 const updated = [...prev, response.data];
-                // ユーザーごとのlocalStorageにも保存
+                // Save to localStorage for each user
                 localStorage.setItem('flashcardAppFlashcards_' + currentUser.id, JSON.stringify(updated));
                 return updated;
             });
             return response.data;
         } catch (error) {
             console.error('Failed to add flashcard via API:', error);
-            // APIエラー時はローカルに追加
+            // When API error, add to localStorage
             const localCard = {
                 ...flashcard,
                 id: Date.now().toString(),
@@ -129,7 +129,7 @@ export const FlashcardProvider = ({children}) =>{
         });
     };
 
-    // カテゴリ別のカード数を取得
+    // Get number of cards by category
     const getCardsByCategory = (categoryId) => {
         return flashcards.filter(card => card.category === categoryId);
     };
