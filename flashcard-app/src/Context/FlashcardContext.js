@@ -1,9 +1,11 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { categoryAPI, flashcardAPI } from "../services/api";
+import { useAuth } from "./AuthContext";
 
 export const FlashcardContext = createContext();
 
 export const FlashcardProvider = ({children}) =>{
+    const { currentUser } = useAuth();
     const[flashcards,setFlashcards] = useState([]);
     const[categories,setCategories] = useState([]);
     const[studyStats,setStudyStats] = useState(null);
@@ -14,20 +16,27 @@ export const FlashcardProvider = ({children}) =>{
     // APIからフラッシュカードデータを取得（GET）
     useEffect(()=>{
         const loadFlashcards = async () => {
+            if (!currentUser) {
+                setFlashcards([]);
+                setIsLoading(false);
+                return;
+            }
             try {
                 setIsLoading(true);
                 const response = await flashcardAPI.getFlashcards();
                 setFlashcards(response.data);
             } catch (error) {
                 console.error('Failed to load flashcards from API:', error);
-                // エラー時は空の配列を設定
-                setFlashcards([]);
+                // エラー時はユーザーごとのlocalStorageから取得
+                const localCards = JSON.parse(localStorage.getItem('flashcardAppFlashcards_' + currentUser.id) || '[]');
+                setFlashcards(localCards);
             } finally {
                 setIsLoading(false);
             }
         };
         loadFlashcards();
-    },[]);
+        // currentUserが変わるたびに再取得
+    },[currentUser]);
 
     // APIからカテゴリデータを取得（GET）
     useEffect(()=>{
@@ -72,9 +81,15 @@ export const FlashcardProvider = ({children}) =>{
 
     // 新しいフラッシュカードを追加（POST）
     const addFlashcard = async (flashcard) => {
+        if (!currentUser) return null;
         try {
             const response = await flashcardAPI.createFlashcard(flashcard);
-            setFlashcards(prev => [...prev, response.data]);
+            setFlashcards(prev => {
+                const updated = [...prev, response.data];
+                // ユーザーごとのlocalStorageにも保存
+                localStorage.setItem('flashcardAppFlashcards_' + currentUser.id, JSON.stringify(updated));
+                return updated;
+            });
             return response.data;
         } catch (error) {
             console.error('Failed to add flashcard via API:', error);
@@ -85,21 +100,33 @@ export const FlashcardProvider = ({children}) =>{
                 createdAt: new Date().toISOString(),
                 lastStudied: null
             };
-            setFlashcards(prev => [...prev, localCard]);
+            setFlashcards(prev => {
+                const updated = [...prev, localCard];
+                localStorage.setItem('flashcardAppFlashcards_' + currentUser.id, JSON.stringify(updated));
+                return updated;
+            });
             return localCard;
         }
     };
 
     const updateFlashcards = (id,updates) =>{
-        setFlashcards(prev=>
-            prev.map(card =>
+        if (!currentUser) return;
+        setFlashcards(prev=> {
+            const updated = prev.map(card =>
                 card.id === id ? {...card, ...updates} : card
-            )
-        );
+            );
+            localStorage.setItem('flashcardAppFlashcards_' + currentUser.id, JSON.stringify(updated));
+            return updated;
+        });
     };
 
     const deleteFlashcard = (id)=>{
-        setFlashcards(prev => prev.filter(card => card.id !== id))
+        if (!currentUser) return;
+        setFlashcards(prev => {
+            const updated = prev.filter(card => card.id !== id);
+            localStorage.setItem('flashcardAppFlashcards_' + currentUser.id, JSON.stringify(updated));
+            return updated;
+        });
     };
 
     // カテゴリ別のカード数を取得
