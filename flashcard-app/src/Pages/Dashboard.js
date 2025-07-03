@@ -8,7 +8,7 @@ const Dashboard =()=>{
     const [newCard, setNewCard] = useState({ 
         question: "", 
         answer: "",
-        category: "General"
+        category: "1"
     });
     const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const Dashboard =()=>{
         setNewCard({
             question:'',
             answer:'',
-            category: "General"
+            category: "1"
         });
         alert('Flashcard created successfully!')
     };
@@ -105,7 +105,7 @@ const Dashboard =()=>{
                                 onChange={(e) => setNewCard({...newCard, category: e.target.value})}
                             >
                                 {categories.map(category => (
-                                    <option key={category.id} value={category.name}>
+                                    <option key={category.id} value={category.id}>
                                         {category.name}
                                     </option>
                                 ))}
@@ -148,8 +148,8 @@ const Dashboard =()=>{
                                     <div className="card-body">
                                         <div className="d-flex justify-content-between align-items-start mb-2">
                                             <h6 className="card-title">{card.question}</h6>
-                                            <span className={`badge bg-${categories.find(c => c.name === card.category)?.color || 'primary'}`}>
-                                                {card.category}
+                                            <span className={`badge bg-${categories.find(c => c.id === card.category)?.color || 'primary'}`}>
+                                                {categories.find(c => c.id === card.category)?.name || 'General'}
                                             </span>
                                         </div>
                                         
