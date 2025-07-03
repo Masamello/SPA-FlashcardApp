@@ -25,8 +25,7 @@ export const flashcardAPI = {
         question: `Question ${post.id}: ${post.title.substring(0, 50)}`,
         answer: post.body.substring(0, 100),
         category: ['General', 'Study', 'Work', 'Personal'][index % 4],
-        createdAt: new Date().toISOString(),
-        lastStudied: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+        createdAt: new Date().toISOString()
       }));
       
       return { data: flashcards };
@@ -48,8 +47,7 @@ export const flashcardAPI = {
       const newFlashcard = {
         ...flashcardData,
         id: response.data.id.toString(),
-        createdAt: new Date().toISOString(),
-        lastStudied: null
+        createdAt: new Date().toISOString()
       };
       
       return { data: newFlashcard };
@@ -67,9 +65,9 @@ export const flashcardAPI = {
       // Generate study statistics data
       const stats = {
         totalCards: response.data.length,
-        studiedToday: Math.floor(Math.random() * 5) + 1,
-        totalStudySessions: Math.floor(Math.random() * 50) + 10,
-        averageScore: Math.floor(Math.random() * 30) + 70
+        studiedToday: parseInt(Math.random() * 5, 10) + 1,
+        totalStudySessions: parseInt(Math.random() * 50, 10) + 10,
+        averageScore: parseInt(Math.random() * 30, 10) + 70
       };
       
       return { data: stats };
