@@ -1,8 +1,9 @@
-import {Flashcard} from './FlashCard.js';
-
-export class StudyFlashcard extends Flashcard {
+export class StudyFlashcard {
     constructor(question,answer,difficulty ='medium'){
-        super(question,answer);
+        this.question = question;
+        this.answer = answer;
+        this.id = Date.now().toString();
+        this.createdAt = new Date().toISOString();
         this.difficulty = difficulty; // 'easy', 'medium', 'hard'
         this.lastReviewed = null; // Timestamp of last review
         this.reviewCount = 0; // Number of times reviewed
@@ -11,13 +12,5 @@ export class StudyFlashcard extends Flashcard {
     review(){
         this.lastReviewed = new Date().toISOString();
         this.reviewCount += 1;
-    }
-
-    getDifficultyColor() {
-        return{
-            easy:'success',
-            medium:'warning',
-            hard:'danger'
-        }[this.difficulty] || 'primary';
     }
 }

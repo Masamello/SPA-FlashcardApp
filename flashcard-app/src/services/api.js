@@ -102,31 +102,8 @@ export const categoryAPI = {
   }
 };
 
-// Additional API functions: Get user information (GET only)
-export const userAPI = {
-  getUserInfo: async (userId = 1) => {
-    try {
-      const response = await api.get(`/users/${userId}`);
-      return { data: response.data };
-    } catch (error) {
-      console.error('Error fetching user info:', error);
-      throw error;
-    }
-  }
-};
 
-  // Additional API functions: Get photo data (using photos endpoint)
-export const photoAPI = {
-  // Get photo list (can be used as flashcard thumbnail)
-  getPhotos: async (limit = 10) => {
-    try {
-      const response = await api.get(`/photos?_limit=${limit}`);
-      return { data: response.data };
-    } catch (error) {
-      console.error('Error fetching photos:', error);
-      throw error;
-    }
-  }
-};
+
+
 
 export default api; 
