@@ -5,8 +5,7 @@ const FlashcardForm = ({ flashcard = null, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     question: '',
     answer: '',
-    category: '',
-    difficulty: 'easy'
+    category: ''
   });
 
   useEffect(() => {
@@ -14,8 +13,7 @@ const FlashcardForm = ({ flashcard = null, onSave, onCancel }) => {
       setFormData({
         question: flashcard.question || '',
         answer: flashcard.answer || '',
-        category: flashcard.category || '',
-        difficulty: flashcard.difficulty || 'easy'
+        category: flashcard.category || ''
       });
     }
   }, [flashcard]);
@@ -84,20 +82,7 @@ const FlashcardForm = ({ flashcard = null, onSave, onCancel }) => {
             />
           </div>
           
-          <div className="mb-3">
-            <label htmlFor="difficulty" className="form-label">Difficulty</label>
-            <select
-              className="form-select"
-              id="difficulty"
-              name="difficulty"
-              value={formData.difficulty}
-              onChange={handleChange}
-            >
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
+
           
           <div className="d-flex gap-2">
             <button type="submit" className="btn btn-primary">

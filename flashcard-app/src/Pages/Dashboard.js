@@ -13,7 +13,7 @@ const Dashboard =()=>{
     const navigate = useNavigate();
 
     const createHandler = async () =>{
-        const studyCard = new StudyFlashcard(newCard.question, newCard.answer,'medium');
+        const studyCard = new StudyFlashcard(newCard.question, newCard.answer);
         const cardWithCategory = {
             ...studyCard,
             category: newCard.category
