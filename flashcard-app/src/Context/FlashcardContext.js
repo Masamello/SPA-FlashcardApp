@@ -1,6 +1,6 @@
 // FlashcardContext.js
 // このファイルは、フラッシュカード・カテゴリ・学習統計などのデータと操作関数を
-// React Contextを使ってアプリ全体で共有するためのプロバイダーを定義しています。
+// React Contextを使ってアプリ全体で共有するためのプロバイダーを定義するコンテキストファイル。
 
 import { createContext, useState, useEffect, useContext } from "react";
 import { categoryAPI, flashcardAPI } from "../services/api";
